@@ -44,7 +44,12 @@ def predict():
     # model_name = data.get('model')  # Default to random forest if not provided
     # if model_name not in models:
     #     return jsonify({"error": f"Model '{model_name}' not found"}), 404
-    model_name='lgbm'
+    # model_name='lgbm'
+    # Select model (default to logistic regression if not provided)
+    model_name = data.get('model', 'logistic_regression')  # Default to 'logistic_regression'
+    
+    if model_name not in models:
+        return jsonify({"error": f"Model '{model_name}' not found"}), 404 
 
     # Get model
     model = models[model_name]
