@@ -27,13 +27,13 @@ def index():
 @app.route('/predict', methods=['POST'])
 def predict():
     data = request.json
-
+    print(data)
     # Ensure required fields are provided
     required_fields = ['Age', 'Sex', 'RestingBP', 'Cholesterol', 'FastingBS', 'MaxHR', 'ExerciseAngina']
     # print(data)
     if not all(field in data for field in required_fields):
         return jsonify({"error": "Missing required fields"}), 400
-
+    print("1")
     # Convert data to DataFrame for prediction
     filtered_data = {key: value for key, value in data.items() if key in required_fields}
     if filtered_data['Sex']=='Male':
@@ -44,19 +44,27 @@ def predict():
         filtered_data['ExerciseAngina']=1
     else:
         filtered_data['ExerciseAngina']=0
+    print("2")
     # Convert filtered data to DataFrame
     df = pd.DataFrame([filtered_data])
 
     # Select model
-    model_name = data.get('model')  # Default to random forest if not provided
+    # model_name = data.get('model')  # Default to random forest if not provided
+    # if model_name not in models:
+    #     return jsonify({"error": f"Model '{model_name}' not found"}), 404
+    # model_name='lgbm'
+    # Select model (default to logistic regression if not provided)
+    model_name = data.get('model','logistic_regression')  # Default to 'logistic_regression'
+    if model_name=='':
+        model_name='logistic_regression'
     if model_name not in models:
-        return jsonify({"error": f"Model '{model_name}' not found"}), 404
-    model_name='lgbm'
-
+        return jsonify({"error": f"Model '{model_name}' not found"}), 404 
+    print("3")
     # Get model
     model = models[model_name]
     pred=model.predict(df)
     print(pred)
+    print("4")
     # Make prediction
     prediction = model.predict(df)[0]
 
