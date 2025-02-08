@@ -35,7 +35,7 @@ def RegularizeText(text):
     text = text.replace('*', '')
     return text
 
-def getAdvice(health_data):
+def getHealthAdvice(health_data):
     # OpenAI API key (replace with your actual API key)
     API_KEY = os.getenv("GENAI_API_KEY")
     
@@ -58,6 +58,35 @@ def getAdvice(health_data):
         "Act as a Doctor and Give me a short health advice based on my health data. "
         f"My Health Data: {health_text}"
         "If the condition is critical, recommend me to visit the nearest hospital immediately. Do not use bold, newline, or any other special characters in your response."
+    )
+    response = chat.send_message(prompt)
+    reply= response.text
+    return (reply)
+
+def getPrecautions(health_data,advice):
+    # OpenAI API key (replace with your actual API key)
+    API_KEY = os.getenv("GENAI_API_KEY")
+    
+    if not API_KEY:
+        print("Error: API key not found. Make sure it's set in the .env file.")
+        return None
+    
+    genai.configure(api_key=API_KEY)
+    model = genai.GenerativeModel('gemini-pro')
+    chat = model.start_chat(history=[])
+    health_text = (
+        f"Age: {health_data.get('Age')}, Sex: {health_data.get('Sex')}, "
+        f"RestingBP: {health_data.get('RestingBP')}, Cholesterol: {health_data.get('Cholesterol')}, "
+        f"FastingBS: {health_data.get('FastingBS')}, MaxHR: {health_data.get('MaxHR')}, "
+        f"ExerciseAngina: {health_data.get('ExerciseAngina')}, Height: {health_data.get('Height')}, "
+        f"Weight: {health_data.get('Weight')}, Steps: {health_data.get('Steps')}, "
+        f"Calories Burned: {health_data.get('Calories Burned')}"
+    )
+    prompt = (
+        "Act as a Doctor and Give me a short list of precautions i need to take to stay healthy based on my health data and doctor's advice. "
+        f"My Health Data: {health_text}"
+        f"Doctor's Advice: {advice}"
+        "If the condition is critical, recommend me to visit the nearest hospital immediately. Do not use bold, or any other special characters in your response only use newline characters to make a list."
     )
     response = chat.send_message(prompt)
     reply= response.text
@@ -113,8 +142,10 @@ def predict():
     print("4")
     # Make prediction
     advice = None
+    precautions = None
     try:
-        advice = getAdvice(data)  # Passing full data object
+        advice = getHealthAdvice(data)  # Passing full data object
+        precautions = getPrecautions(data,advice)
     except Exception as e:
         print(f"GenAI error: {str(e)}")
 
@@ -126,7 +157,8 @@ def predict():
     # Include AI advice only if it was successfully generated
     if advice:
         response["advice"] = advice
-
+    if precautions:
+        response["precautions"] = precautions
     return jsonify(response)
 
 # Run the app
