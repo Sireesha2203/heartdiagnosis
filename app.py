@@ -49,7 +49,7 @@ def getHealthAdvice(health_data):
     health_text = (
         f"Age: {health_data.get('Age')}, Sex: {health_data.get('Sex')}, "
         f"RestingBP: {health_data.get('RestingBP')}, Cholesterol: {health_data.get('Cholesterol')}, "
-        f"(FastingBS is calculated as: 0 if Blood Glucose < 100, 1 if Blood Glucose > 125, otherwise 0.5), "
+        f"(FastingBS is calculated as: 0 if Blood Glucose <= 100, 1 if Blood Glucose > 125, otherwise 0.5), "
         f"FastingBS: {health_data.get('FastingBS')}, MaxHR: {health_data.get('MaxHR')}, Blood Glucose: {health_data.get('Blood Glucose')} "
         f"ExerciseAngina: {health_data.get('ExerciseAngina')}, Height: {health_data.get('Height')}, "
         f"Weight: {health_data.get('Weight')}, Steps: {health_data.get('Steps')}, "
@@ -78,7 +78,7 @@ def getPrecautions(health_data,advice):
     health_text = (
         f"Age: {health_data.get('Age')}, Sex: {health_data.get('Sex')}, "
         f"RestingBP: {health_data.get('RestingBP')}, Cholesterol: {health_data.get('Cholesterol')}, "
-        f"(FastingBS is calculated as: 0 if Blood Glucose < 100, 1 if Blood Glucose > 125, otherwise 0.5), "
+        f"(FastingBS is calculated as: 0 if Blood Glucose <= 100, 1 if Blood Glucose > 125, otherwise 0.5), "
         f"FastingBS: {health_data.get('FastingBS')} , MaxHR: {health_data.get('MaxHR')}, Blood Glucose: {health_data.get('Blood Glucose')} "
         f"ExerciseAngina: {health_data.get('ExerciseAngina')}, Height: {health_data.get('Height')}, "
         f"Weight: {health_data.get('Weight')}, Steps: {health_data.get('Steps')}, "
