@@ -49,7 +49,8 @@ def getHealthAdvice(health_data):
     health_text = (
         f"Age: {health_data.get('Age')}, Sex: {health_data.get('Sex')}, "
         f"RestingBP: {health_data.get('RestingBP')}, Cholesterol: {health_data.get('Cholesterol')}, "
-        f"FastingBS: {health_data.get('FastingBS')}, MaxHR: {health_data.get('MaxHR')}, "
+        f"(FastingBS is calculated as: 0 if Blood Glucose < 100, 1 if Blood Glucose > 125, otherwise 0.5), "
+        f"FastingBS: {health_data.get('FastingBS')}, MaxHR: {health_data.get('MaxHR')}, Blood Glucose: {health_data.get('Blood Glucose')} "
         f"ExerciseAngina: {health_data.get('ExerciseAngina')}, Height: {health_data.get('Height')}, "
         f"Weight: {health_data.get('Weight')}, Steps: {health_data.get('Steps')}, "
         f"Calories Burned: {health_data.get('Calories Burned')}"
@@ -77,7 +78,8 @@ def getPrecautions(health_data,advice):
     health_text = (
         f"Age: {health_data.get('Age')}, Sex: {health_data.get('Sex')}, "
         f"RestingBP: {health_data.get('RestingBP')}, Cholesterol: {health_data.get('Cholesterol')}, "
-        f"FastingBS: {health_data.get('FastingBS')}, MaxHR: {health_data.get('MaxHR')}, "
+        f"(FastingBS is calculated as: 0 if Blood Glucose < 100, 1 if Blood Glucose > 125, otherwise 0.5), "
+        f"FastingBS: {health_data.get('FastingBS')} , MaxHR: {health_data.get('MaxHR')}, Blood Glucose: {health_data.get('Blood Glucose')} "
         f"ExerciseAngina: {health_data.get('ExerciseAngina')}, Height: {health_data.get('Height')}, "
         f"Weight: {health_data.get('Weight')}, Steps: {health_data.get('Steps')}, "
         f"Calories Burned: {health_data.get('Calories Burned')}"
@@ -116,6 +118,10 @@ def predict():
         filtered_data['ExerciseAngina']=1
     else:
         filtered_data['ExerciseAngina']=0
+    if data['Blood Glucose'] > 113:
+        filtered_data['FastingBS'] = 1
+    else:
+        filtered_data['FastingBS'] = 0
     print("2")
     # Convert filtered data to DataFrame
     df = pd.DataFrame([filtered_data])
